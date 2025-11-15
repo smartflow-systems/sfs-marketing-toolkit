@@ -1,0 +1,30 @@
+name: Dependency Update
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Check for updates
+        run: |
+          npm outdated || true
+          echo "Review outdated packages above"
+
+      - name: Security audit
+        run: npm audit
+        continue-on-error: true
